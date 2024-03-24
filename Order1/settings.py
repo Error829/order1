@@ -81,29 +81,6 @@ WSGI_APPLICATION = 'Order1.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'order1',  # 数据库名字
-        'USER': 'root',
-        'PASSWORD': '359509tcw',
-        'HOST': '127.0.0.1',  # ip
-        'PORT': 3306,
-    }
-}
-
-# redis
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"max_connections": 100},
-            "PASSWORD": "359509tcw",
-        }
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -253,3 +230,8 @@ ORDER_PREMISSION = {
 
     },
 }
+
+try:
+    from .local_settings import *
+except Exception as e:
+    print(e)
