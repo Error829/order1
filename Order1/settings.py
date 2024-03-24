@@ -235,3 +235,4 @@ try:
     from .local_settings import *
 except Exception as e:
     print(e)
+    print('test')
