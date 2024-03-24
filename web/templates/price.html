@@ -1,0 +1,68 @@
+{% extends 'home.html' %}
+{% load buttons %}
+
+{% block modal %}
+    {% include 'alert_modal.html' %}
+{% endblock %}
+
+{% block body %}
+
+    <table class="table caption-top">
+        <caption style="position: relative">
+            {% add_button request 'price_add' %}
+        </caption>
+
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">数量</th>
+            <th scope="col">价格</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in querylist %}
+            <tr cid="{{ item.id }}">
+                <th>{{ item.id }}</th>
+                <th scope="row">{{ item.amount }}</th>
+                <td>{{ item.price }}</td>
+                <td>
+                    {% edit_button request 'price_edit' policy_id=item.id %}
+                    {% delete_button request 'policy_delete' target=item.id %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <ul class="pagination">
+        {{ paramstring }}
+    </ul>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        var DELETEID
+        $('.btn-delete').click(function () {
+            DELETEID = $(this).attr('value')
+            // console.log(DELETE)
+        })
+        $('#BtnDeleteConfirm').click(function () {
+            $.ajax({
+                url: '{% url 'policy_delete' %}',
+                type: 'GET',
+                data: {policy_id: DELETEID},
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status) {
+                        location.reload()
+                    } else {
+                        $("#deleteError").text(res.detail);
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

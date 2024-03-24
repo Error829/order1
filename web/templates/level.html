@@ -1,0 +1,30 @@
+{% extends 'home.html' %}
+
+{% block body %}
+
+    <table class="table caption-top">
+        <caption><button class="btn btn-success"><a href="add/" style="text-decoration: none"><b style="color: black">添加</b></a></button></caption>
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">级别</th>
+            <th scope="col">折扣</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for item in querylist %}
+                <tr>
+                    <th scope="row">{{ item.id }}</th>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.percent }}%</td>
+                    <td>
+                        <button class="btn btn-secondary"><a href="{% url 'level_edit' level_id=item.id %}" style="text-decoration: none"><b style="color: black">编辑</b></a></button>
+                        <button class="btn btn-danger"><a href="{% url 'level_delete' level_id=item.id %}" style="text-decoration: none"><b style="color: black">删除</b></a></button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

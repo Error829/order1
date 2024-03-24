@@ -1,0 +1,32 @@
+{#这个是母版#}
+{% load static %}
+{% load menu %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}">
+</head>
+<body>
+{% block modal %}{% endblock %}
+{% include 'navbar.html' %}
+
+<div class="pg-body-left" id="box">
+    {% menu_create request %}
+</div>
+<div class="pg-body-right">
+    {% include 'path_nav.html' %}
+    {% block body %}{% endblock %}
+</div>
+
+</body>
+<script src="{% static 'js/jquery3.5.js' %}"></script>
+<script src="{% static 'js/menu.js' %}"></script>
+<script src="{% static 'js/logout.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+{% block js %}{% endblock %}
+</html>

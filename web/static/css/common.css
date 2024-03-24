@@ -1,0 +1,30 @@
+*{
+            margin: 0;
+        }
+        .pg-header{
+            height: 48px;
+            background: #bfd1ec;
+            z-index: 100;
+        }
+        .avatar{
+            float: right;
+        }
+        .pg-body-left{
+            width:220px;
+            height: auto;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            top: 56px;
+            z-index: 100;
+        }
+        .pg-body-right{
+            height: auto;
+            position: absolute;
+            left: 220px;
+            bottom: 0;
+            top: 56px;
+            right: 0;
+            z-index: 100;
+            background-color: white;
+        }

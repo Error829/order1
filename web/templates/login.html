@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ORDER</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css'%}">
+    <style>
+        .box{
+            {#width: 450px;#}
+            {#height: 250px;#}
+            width: 500px;
+            padding: 20px;
+            opacity: 0.8;
+            margin-left: 100px;
+            margin-right: auto;
+            margin-top: 100px;
+            border: 1px solid white;
+            box-shadow: 5px 10px 10px darkslategray;
+        }
+    </style>
+</head>
+<body style='background-image:url("{% static 'images/7.jpg'%}")'>
+
+<div class="box" style="background-color: white">
+
+    <div>
+        <form method="POST" novalidate>
+          {% csrf_token %}
+            <div class="row">
+              <div class="title col-md-4"><h2>用户登录</h2></div>
+            </div>
+
+            {% for field in form %}
+                <div class="mb-3" style="position:relative;">
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    <span style="position: absolute;color: red;bottom: -22px">{{ field.errors.0 }}</span>
+                </div>
+            {% endfor %}
+
+            <div class="row" style="padding-top: 10px">
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <span style="color: red">{{ error }}</span>
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'sms_login' %}" style="float: right;font-size: 22px">短信登录</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

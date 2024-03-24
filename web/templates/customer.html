@@ -1,0 +1,93 @@
+{% extends 'home.html' %}
+{% load buttons %}
+
+{% block modal %}
+    {% include 'alert_modal.html' %}
+{% endblock %}
+
+{% block body %}
+
+    <table class="table caption-top">
+        <caption style="position: relative">
+            {% add_button request 'customer_add' %}
+            <div class="right" style="position:absolute;width: 200px;right: 10px;top: 15px">
+                <form class="form-inline" method="get">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <input name="keyword" type="text" class="form-control" placeholder="请输入关键字"
+                                   value="{{ keyword }}">
+                        </div>
+                        <button type="submit" class="btn btn-default col-md-2" style="float: right;border:solid darkgray 1px">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </caption>
+
+        <thead>
+        <tr>
+            <th scope="col">用户名</th>
+            <th scope="col">手机号</th>
+            <th scope="col">账户余额</th>
+            <th scope="col">级别</th>
+            <th scope="col">创建日期</th>
+            <th scope="col">创建者</th>
+            <th scope="col">交易记录</th>
+            <th scope="col">重置密码</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in querylist %}
+            <tr cid="{{ item.id }}">
+                <th scope="row">{{ item.username }}</th>
+                <td>{{ item.mobile }}</td>
+                <td>{{ item.balance }}</td>
+                <td>{{ item.level.title }}({{ item.level.percent }}%)</td>
+                <td>{{ item.create_date|date:'Y-m-d H:i' }}</td>
+                <td>{{ item.creator.username }}</td>
+                <td><a href="{% url 'customer_trade' customer_id=item.id %}">交易记录</a></td>
+                <td><a href="{% url 'customer_reset' customer_id=item.id %}">重置密码</a></td>
+                <td>
+                    {% edit_button request 'customer_edit' customer_id=item.id %}
+                    {% delete_button request 'customer_delete' target=item.id %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        {{ paramstring }}
+    </ul>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        var DELETEID
+        $('.btn-delete').click(function () {
+            DELETEID = $(this).attr('value')
+            // console.log(DELETE)
+        })
+        $('#BtnDeleteConfirm').click(function () {
+            $.ajax({
+                url: '{% url 'customer_delete' %}',
+                type: 'GET',
+                data: {customer_id: DELETEID},
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status) {
+                        location.reload()
+                    } else {
+                        $("#deleteError").text(res.detail);
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'home.html' %}
+
+{% block body %}
+    <div class="row">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="col-md-5" style="position:relative;">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }} <i
+                            style="font-size: 14px">{{ field.help_text }}</i></label>
+                    {{ field }}
+                    <span style="position: absolute;color: red;bottom: -22px">{{ field.errors.0 }}</span>
+                </div>
+            {% endfor %}
+
+            <div class="row" style="padding-top: 10px">
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    {#                    <button type="button" class="btn btn-primary"><a href="return/" style="text-decoration: none"><text style="color: white">Return</text></a></button>#}
+                    <span style="color: red">{{ error }}</span>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

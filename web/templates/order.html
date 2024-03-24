@@ -1,0 +1,74 @@
+{% extends 'home.html' %}
+{% load static %}
+
+
+{% block body %}
+
+    <table class="table caption-top">
+        <caption style="position: relative">
+            <button class="btn btn-success"><a href="add/" style="text-decoration: none"><b
+                    style="color: black">添加</b></a></button>
+        </caption>
+
+        <thead>
+        <tr>
+            <th scope="col">视频地址</th>
+            <th scope="col">数量</th>
+            <th scope="col">价格</th>
+            <th scope="col">播放量</th>
+            <th scope="col">订单号</th>
+            <th scope="col">创建日期</th>
+            <th scope="col">状态</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in querylist %}
+            <tr cid="{{ item.id }}">
+                <th>{{ item.url }}</th>
+                <th scope="row">{{ item.count }}</th>
+                <td>{{ item.real_price }}</td>
+                <th>{{ item.old_view_count }}</th>
+                <th>{{ item.oid }}</th>
+                <th>{{ item.create_date|date:'Y-m-d' }}</th>
+                <th>{{ item.get_status_display }}</th>
+                <th>
+                    {% if item.status == 1 %}
+                        <button class="btn btn-danger btn-delete" id="CancelBtn" value="{{ item.oid }}"><b style="color: black">撤单</b></button>
+                    {% endif %}
+                </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <ul class="pagination">
+        {{ paramstring }}
+    </ul>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/csrf.js' %}"></script>
+    <script>
+        var DELETEID
+        $('.btn-delete').click(function () {
+            DELETEID = $(this).attr('value')
+            console.log(DELETEID)
+            $.ajax({
+                url: '{% url 'order_cancel' %}',
+                type: 'POST',
+                data: {order_oid:DELETEID},
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status) {
+                        location.reload()
+                    } else {
+                        alert(res.detail)
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock %}

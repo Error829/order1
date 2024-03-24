@@ -1,0 +1,7 @@
+<nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {% for item in request.user_object.path_list %}
+            <li class="breadcrumb-item">{{ item }}</li>
+        {% endfor %}
+      </ol>
+</nav>

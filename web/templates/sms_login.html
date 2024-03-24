@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ORDER</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+    <style>
+        .box {
+        {#width: 450px;#}{#height: 250px;#} width: 500px;
+            padding: 20px;
+            opacity: 0.8;
+            margin-left: 100px;
+            margin-right: auto;
+            margin-top: 100px;
+            border: 1px solid white;
+            box-shadow: 5px 10px 10px darkslategray;
+        }
+        .error-message{
+            color: red;
+            position:absolute
+        }
+    </style>
+</head>
+<body style='background-image:url("{% static 'images/7.jpg' %}")'>
+
+<div class="box" style="background-color: white">
+    <div class="title"><h2>用户登录</h2></div>
+    <div>
+        <form method="POST" novalidate id="Form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                {% if field.label == '短信验证码' %}
+                    <div class="row">
+                        <div class="col-md-7 mb-3" style="position: relative">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            <span class="error-message">{{ field.errors.0 }}</span>
+                        </div>
+                        <div class="col-md-5">
+                            <input id="sms" type="button" value="获取验证码" class="btn btn-secondary"
+                                   style="margin-top:32px"/>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="mb-3" style="position: relative">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        <span class="error-message" style="bottom:-21px">{{ field.errors.0 }}</span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <div style="padding-top: 20px">
+                <button type="button" class="btn btn-primary" id="submit_button">Submit</button>
+                <a href="{% url 'login' %}" style="float: right;font-size: 22px">密码登录</a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+<script src="{% static 'js/jquery3.5.js' %}"></script>
+<script src="{% static 'js/csrf.js' %}"></script>
+<script>
+    var $sms = $('#sms'), $submit = $("#submit_button"), $form = $('#Form')
+    var $role = $('#id_role'), $mobile = $('#id_mobile'), $code = $('#id_code')
+
+    //点击提交按钮时候再发一次ajax请求
+    $submit.click(function (){
+        //每次开始前清楚所有错误信息
+        $('.error-message').empty()
+        //将所有可见数据提交回sms_login/网址
+        $.ajax({
+            url: '{% url 'sms_login' %}',
+            type: 'POST',
+            dataType: 'JSON',
+            data: $form.serialize(),
+            success : function (res){
+                //sms_login网址进行后端校验 返回json数据
+                if (!res.status){
+                    //接收数据进行渲染（错误信息）
+                    $.each(res.detail,function(key,value){
+                        $("#id_"+key).next().text(value[0])
+                    })
+                }else {
+                    //如果检验全过则进行跳转
+                    //res.data = '/level/list/'
+                    location.href = res.data;
+                }
+            }
+        })
+    })
+
+    $sms.click(function () {
+        //每次开始前清楚所有错误信息
+        $('.error-message').empty()
+        //1.获取手机号，向后台发送信息
+        $.ajax({
+            url:'{% url 'sms_send' %}',
+            type:'POST',
+            dataType:'JSON',
+            data:{role:$role.val(),mobile:$mobile.val(),},
+            success : function (res) {
+                if (!res.status){
+                    $.each(res.detail,function(key,value){
+                        $("#id_"+key).next().text(value[0])
+                    })
+                }else{
+                    //2.执行动画效果
+                    SendSmsRemind()
+                }
+            }
+        })
+    })
+
+    var SendSmsRemind = function () {
+
+        $sms.prop('disabled', true)
+
+        var time = 60
+        var TimeRecord = setInterval(function () {
+            $sms.val(time + 's重新获取')
+            time -= 1
+            if (time < 1) {
+                clearInterval(TimeRecord)
+                $sms.prop('disabled', false)
+                $sms.val('获取验证码')
+            }
+        }, 1000)
+    }
+
+</script>
+</body>
+</html>
