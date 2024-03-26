@@ -100,8 +100,7 @@ def sms_login(request):
                                     'password': user_object.password}
     res.status = True
     res.data = settings.LOGIN_HOME
-    return redirect(settings.LOGIN_HOME)
-    # return JsonResponse(res.dict, json_dumps_params={"ensure_ascii": False})
+    return JsonResponse(res.dict, json_dumps_params={"ensure_ascii": False})
 
 
 def sms_send(request):
