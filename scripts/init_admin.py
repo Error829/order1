@@ -12,4 +12,4 @@ django.setup()  # 伪造让django启动
 from web import models
 from utils.encrypt import md5
 
-models.Administrator.objects.create(username='TC', password=md5("359509tcw"), mobile="17798320257")
+models.Administrator.objects.create(username='admin', password=md5("admin"), mobile="17798320257")
